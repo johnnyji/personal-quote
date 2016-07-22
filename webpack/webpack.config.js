@@ -12,17 +12,17 @@ const PLUGINS = [
 module.exports = {
   entry: {
     // After webpack transpiles, this file will become `backgound.js`
-    background: path.join(ROOT, 'background/index.js'),
+    'background.js': path.join(ROOT, 'background/index.js'),
     // After webpack transpiles, this file will become `content.js`
-    content: path.join(ROOT, 'content/index.js')
+    'content.js': path.join(ROOT, 'content/index.js')
   },
   output: {
     // `[name].js` makes sure that every key in the webpack config's `entry` becomes
     // a seperate file in the output, with the name of the file being the key name,
     // See: http://stackoverflow.com/questions/31907672/how-to-set-multiple-file-entry-and-output-in-project-with-webpack
-    filename: '[name].js',
+    filename: '[name]',
     // This is where the assets are physically written on disk
-    path: path.join(ROOT, '../build'),
+    path: path.join(ROOT, './build/'),
     // This is where the assets are served up. In our case, just the root directory
     publicPath: '/'
   },
