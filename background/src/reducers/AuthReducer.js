@@ -1,3 +1,6 @@
+import {
+  AUTH_SUCCESS
+} from '../action_types/AuthActionTypes';
 import createReducer from 'create-reducer-redux';
 import Immutable from 'immutable';
 
@@ -9,9 +12,9 @@ export default createReducer(initialState, {
 
   name: 'Auth',
 
-  handlers: [
-    onAuth: ActionTypes.AUTH_SUCCESS
-  ],
+  handlers: {
+    onAuth: [AUTH_SUCCESS]
+  },
 
   onAuth(state, {currentUser}) {
     return state.set('currentUser', Immutable.fromJS(currentUser));

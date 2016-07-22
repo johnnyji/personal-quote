@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import App from './src/components/App.js';
 import {Provider} from 'react-redux';
 import {render} from 'react-dom';
