@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const ROOT = path.join(__dirname, './../');
+const SRC = path.join(ROOT, 'src');
 const PRESETS = ['es2015', 'stage-0', 'react'];
 const PLUGINS = [
   'add-module-exports',
@@ -12,9 +13,9 @@ const PLUGINS = [
 module.exports = {
   entry: {
     // After webpack transpiles, this file will become `backgound.js`
-    'background.js': path.join(ROOT, 'background/index.js'),
+    'background.js': path.join(ROOT, 'src/background/index.js'),
     // After webpack transpiles, this file will become `content.js`
-    'content.js': path.join(ROOT, 'content/index.js')
+    'content.js': path.join(ROOT, 'src/content/index.js')
   },
   output: {
     // `[name].js` makes sure that every key in the webpack config's `entry` becomes
@@ -41,7 +42,7 @@ module.exports = {
     loaders: [
       {
         test: /.js$/,
-        exclude: /node_modules/,
+        include: [SRC],
         loader: 'babel',
         query: {
           cacheDirectory: true,
@@ -50,14 +51,15 @@ module.exports = {
         }
       }, {
         test: /\.json$/,
-        exclude: /node_modules/,
+        include: [SRC],
         loader: 'json'
       }, {
         test: /.scss$/,
-        exclude: /node_modules/,
+        include: [SRC],
         loader: ExtractTextPlugin.extract('style', 'css!autoprefixer!sass')
       }, {
         test: /\.css$/,
+        include: [SRC],
         loader: 'style!css!postcss'
       }
     ],
