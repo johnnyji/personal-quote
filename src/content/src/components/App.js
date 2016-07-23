@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import pureRender from 'pure-render-decorator';
-import '../../scss/App.scss';
+import styles from '../../scss/App.scss';
 
 const CLS = 'App';
 
@@ -11,7 +11,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className={CLS}>
+      <div className={styles.main}>
         <h1>Hello My Nigga</h1>
       </div>
     );
