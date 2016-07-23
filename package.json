@@ -10,6 +10,7 @@
   },
   "author": "Johnny Ji",
   "dependencies": {
+    "camelcase-object": "^1.0.0",
     "create-reducer-redux": "^1.0.4",
     "immutable": "^3.8.1",
     "node-sass": "^3.8.0",
@@ -20,6 +21,8 @@
     "react-immutable-proptypes": "^1.7.1",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.1.0",
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
@@ -37,7 +40,9 @@
     "eslint-config-johnnyji": "^0.1.6",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-react": "^5.2.2",
+    "exports-loader": "^0.6.3",
     "extract-text-webpack-plugin": "^1.0.1",
+    "imports-loader": "^0.6.5",
     "json-loader": "^0.5.4",
     "postcss-loader": "^0.9.1",
     "sass-loader": "^4.0.0",

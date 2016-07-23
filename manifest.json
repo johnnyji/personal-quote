@@ -11,5 +11,8 @@
       "./build/background.js"
     ],
     "persistent": false
-  }
+  },
+  "permissions": [
+    "storage"
+  ]
 }

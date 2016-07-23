@@ -5,9 +5,11 @@ import {Provider} from 'react-redux';
 import {render} from 'react-dom';
 import React from 'react';
 import {Store} from 'react-chrome-redux';
+import reduxStore from '../background/src/store';
 
+// Hydrates the proxy store with the state from our Redux Store
 const proxyStore = new Store({
-  state: {},
+  state: reduxStore.getState(),
   portName: 'whatisaportname?'
 });
 

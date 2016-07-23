@@ -1,0 +1,11 @@
+@import '../partials/colors.scss';
+
+:local(.main) {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+:local(.spinner) {
+  color: $spinner;
+}
