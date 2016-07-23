@@ -18,7 +18,7 @@ module.exports = {
     'content.js': path.join(ROOT, 'src/content/index.js')
   },
   output: {
-    // `[name].js` makes sure that every key in the webpack config's `entry` becomes
+    // `[name]` makes sure that every key in the webpack config's `entry` becomes
     // a seperate file in the output, with the name of the file being the key name,
     // See: http://stackoverflow.com/questions/31907672/how-to-set-multiple-file-entry-and-output-in-project-with-webpack
     filename: '[name]',

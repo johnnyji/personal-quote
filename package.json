@@ -12,6 +12,7 @@
   "dependencies": {
     "create-reducer-redux": "^1.0.4",
     "immutable": "^3.8.1",
+    "node-sass": "^3.8.0",
     "pure-render-decorator": "^1.1.1",
     "react": "^0.14.3",
     "react-chrome-redux": "0.0.7",
