@@ -3,7 +3,6 @@ import BackgroundImageActionCreators from '../../../background/src/action_creato
 import {connect} from 'react-redux';
 import FullPageSpinner from '../components/ui/FullPageSpinner';
 
-
 export default (ComposedComponent) => {
 
   class RequiresBackgroundImage extends Component {
@@ -18,7 +17,16 @@ export default (ComposedComponent) => {
 
     componentWillMount() {
       if (!this.props.fetching) {
-        this.props.dispatch(BackgroundImageActionCreators.fetch());
+        debugger;
+        this.props.dispatch({type: 'FETCH_BACKGROUND_IMAGE'});
+
+        // this.props.dispatch(BackgroundImageActionCreators.fetch())
+        //   .then((response) => {
+        //     debugger;
+        //   })
+        //   .catch((response) => {
+        //     debugger;
+        //   });
       }
     }
 
@@ -34,8 +42,8 @@ export default (ComposedComponent) => {
   return connect((state) => {
     debugger;
     return {
-      fetching: state.backgroundImage.get('fetching'),
-      backgroundImageUrl: state.backgroundImage.get('backgroundImageUrl')
+      fetching: state.backgroundImage.fetching,
+      backgroundImageUrl: state.backgroundImage.backgroundImageUrl
     };
   })(RequiresBackgroundImage);
 };

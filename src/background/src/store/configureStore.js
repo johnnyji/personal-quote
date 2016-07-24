@@ -1,21 +1,9 @@
 import {applyMiddleware, createStore} from 'redux';
 // import {alias} from 'react-chrome-redux';
-// import actionAliases from '../aliases';
+// import actionAliases from '../action_aliases/BackgroundImageActionAliases';
 import logger from 'redux-logger';
 import reducers from '../reducers';
 import thunk from 'redux-thunk';
-
-const transformImmutableToJs = (state) => {
-  const transformedState = {};
-
-  for (const key in state) {
-    if (Object.prototype.hasOwnProperty.call(state, key)) {
-      transformedState[key] = state[key].toJS();
-    }
-  }
-
-  return transformedState;
-};
 
 // TODO: Remove Logger for Prod
 const middleware = applyMiddleware(
@@ -23,7 +11,7 @@ const middleware = applyMiddleware(
   // See: https://github.com/tshaddix/react-chrome-redux/wiki/Advanced-Usage
   // alias(actionAliases),
   thunk,
-  logger({stateTransformer: transformImmutableToJs})
+  logger()
 );
 
 export default (initialStateOverride = {}) => {

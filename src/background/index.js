@@ -1,6 +1,7 @@
-import store from './src/store';
+import configureStore from './src/store/configureStore';
+import {portName} from '../../config';
 import {wrapStore} from 'react-chrome-redux';
 
-wrapStore(store, {
-  portName: 'whatisaportname?'
+wrapStore(configureStore(), {
+  portName
 });
