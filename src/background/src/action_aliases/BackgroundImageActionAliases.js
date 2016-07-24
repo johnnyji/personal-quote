@@ -1,5 +1,6 @@
 import {
-  FETCH_BACKGROUND_IMAGE
+  FETCH_BACKGROUND_IMAGE,
+  SET_NEW_BACKGROUND_IMAGE
 } from '../action_types/BackgroundImageActionTypes';
 import BackgroundImageActionCreators from '../action_creators/BackgroundImageActionCreators';
 import endpoints from '../utils/http/endpoints';
@@ -11,16 +12,44 @@ const fetchBackgroundImage = () => {
 
     http.get(endpoints.photos)
       .then((response) => {
-        const image = response.hits[Math.floor(Math.random() * response.hits.length)];
-        // TODO: Cache images in chrome.storage and rotate daily, removing one from array everyday
-        dispatch(BackgroundImageActionCreators.fetchSuccess(image.webformatURL));
+        const [image, ...restImages] = response.hits.map((hit) => hit.webformatURL);
+
+        // Cache images in the chrome storage
+        chrome.storage.sync.set({backgroundImageUrls: restImages}, () => {
+          const currentBackgroundImage = {
+            createdAt: new Date(),
+            url: image
+          };
+          // Set the current image in chrome storage, but also keep a `created` timestamp
+          // so we know when to rotate images
+          chrome.storage.sync.set({currentBackgroundImage}, () => {
+            dispatch(BackgroundImageActionCreators.fetchSuccess(currentBackgroundImage));
+          });
+        });
       })
       .catch((response) => {
         debugger;
       });
-  }
+  };
+};
+
+const setBackgroundImage = () => {
+  return (dispatch) => {
+    const [image, ...restImages] = chome.storage.sync.get('backgroundImageUrls');
+    const currentBackgroundImage = {
+      createdAt: new Date(),
+      url: image
+    };
+
+    chrome.storage.sync.set({backgroundImageUrls: restImages}, () => {
+      chrome.storage.sync.set({currentBackgroundImage}, () => {
+        dispatch(BackgroundImageActionCreators.setNewImageSuccess(currentBackgroundImage));
+      });
+    });
+  };
 };
 
 export default {
-  [FETCH_BACKGROUND_IMAGE]: fetchBackgroundImage
+  [FETCH_BACKGROUND_IMAGE]: fetchBackgroundImage,
+  [SET_NEW_BACKGROUND_IMAGE]: setBackgroundImage
 };

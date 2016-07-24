@@ -1,11 +1,12 @@
 import {
   FETCH_BACKGROUND_IMAGE_PENDING,
   FETCH_BACKGROUND_IMAGE_SUCCESS,
+  SET_NEW_BACKGROUND_IMAGE_SUCCESS
 } from '../action_types/BackgroundImageActionTypes';
 import createReducer from 'create-reducer-redux';
 
 const initialState = {
-  backgroundImageUrl: null,
+  backgroundImage: null,
   fetched: false,
   fetching: false
 };
@@ -16,7 +17,8 @@ export default createReducer(initialState, {
 
   handlers: {
     onFetching: [FETCH_BACKGROUND_IMAGE_PENDING],
-    onFetched: [FETCH_BACKGROUND_IMAGE_SUCCESS]
+    onFetched: [FETCH_BACKGROUND_IMAGE_SUCCESS],
+    onNewImage: [SET_NEW_BACKGROUND_IMAGE_SUCCESS]
   },
 
   onFetching(state) {
@@ -24,7 +26,11 @@ export default createReducer(initialState, {
   },
 
   onFetched(state, {image}) {
-    return {...state, fetched: true, fetching: false, backgroundImageUrl: image};
+    return {...state, fetched: true, fetching: false, backgroundImage: image};
+  },
+  
+  onNewImage(state, {image}) {
+    return {...state, backgroundImage: image};
   }
 
 });
