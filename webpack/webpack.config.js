@@ -36,7 +36,9 @@ module.exports = {
     // Polyfills `fetch`
     new webpack.ProvidePlugin({
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-    })
+    }),
+    // Only loads the english version of moment.js
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
   ],
   module: {
     loaders: [

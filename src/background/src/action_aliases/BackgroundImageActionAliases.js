@@ -17,14 +17,10 @@ const fetchBackgroundImage = () => {
         // Cache images in the chrome storage
         chrome.storage.sync.set({backgroundImageUrls: restImages}, () => {
           const currentBackgroundImage = {
-            createdAt: new Date(),
+            createdAt: new Date().toISOString(),
             url: image
           };
-          // Set the current image in chrome storage, but also keep a `created` timestamp
-          // so we know when to rotate images
-          chrome.storage.sync.set({currentBackgroundImage}, () => {
-            dispatch(BackgroundImageActionCreators.fetchSuccess(currentBackgroundImage));
-          });
+          dispatch(BackgroundImageActionCreators.fetchSuccess(currentBackgroundImage));
         });
       })
       .catch((response) => {
@@ -33,18 +29,22 @@ const fetchBackgroundImage = () => {
   };
 };
 
-const setBackgroundImage = () => {
+const setBackgroundImage = ({payload: {images}}) => {
   return (dispatch) => {
-    const [image, ...restImages] = chome.storage.sync.get('backgroundImageUrls');
-    const currentBackgroundImage = {
-      createdAt: new Date(),
+    // Gets a random image from the cached images
+    const randIndex = Math.floor(Math.random() * images.length);
+    const image = images[randIndex];
+    const restCachedImages = images.slice(0, randIndex).concat(images.slice(randIndex + 1, images.length));
+
+    const newBackgroundImage = {
+      createdAt: new Date().toISOString(),
       url: image
     };
 
-    chrome.storage.sync.set({backgroundImageUrls: restImages}, () => {
-      chrome.storage.sync.set({currentBackgroundImage}, () => {
-        dispatch(BackgroundImageActionCreators.setNewImageSuccess(currentBackgroundImage));
-      });
+    // Here we set a new background image, whilst simultaniously removing it
+    // from the array of cached images so we don't set it again
+    chrome.storage.sync.set({backgroundImageUrls: restCachedImages}, () => {
+      dispatch(BackgroundImageActionCreators.setNewImageSuccess(newBackgroundImage));
     });
   };
 };

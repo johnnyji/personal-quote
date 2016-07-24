@@ -14,58 +14,63 @@ export default (ComposedComponent) => {
       dispatch: PropTypes.func.isRequired,
       fetched: PropTypes.bool.isRequired,
       fetching: PropTypes.bool.isRequired,
-      backgroundImageUrl: PropTypes.shape({
-        createdAt: PropTypes.instanceOf(Date).isRequired,
+      backgroundImage: PropTypes.shape({
+        createdAt: PropTypes.string.isRequired,
         url: PropTypes.string.isRequired
       })
     };
 
     componentWillMount() {
-      const {dispatch, fetching} = this.props;
+      const {backgroundImage, fetching} = this.props;
+      const hasBackgroundImage = backgroundImage &&
+        Object.prototype.hasOwnProperty.call(backgroundImage, 'url') &&
+        Object.prototype.hasOwnProperty.call(backgroundImage, 'createdAt');
+      const currentTime = new Date().toISOString();
 
-      chrome.storage.sync.get('backgroundImageUrls', (images) => {
-        chrome.storage.sync.get('currentBackgroundImage', (currentImage) => {
-          // Check if the current image is stored
-          const hasCurrentImage =
-            Object.prototype.hasOwnProperty.call(currentImage, 'url') &&
-            Object.prototype.hasOwnProperty.call(currentImage, 'createdAt');
+      // If we're already fetching for background pictures, don;t do anything
+      if (fetching) return;
 
-          // If theres no current image and we're not getting more images, we should get more images
-          if (!hasCurrentImage && !fetching) {
-            dispatch(BackgroundImageActionCreators.fetch());
-            return;
-          }
+      // If there's no background image, load it in from storage
+      if (!hasBackgroundImage) {
+        this._loadNewBackgroundPicture();
+        return;
+      }
 
-          // When there's a current image
-          if (hasCurrentImage) {
-            // Changes the background image every 5 hours
-            const currentImageExpired = getHoursDiff(currentImage.createdAt, new Date()) > 5;
-
-            // We're on the last image, and theres no more images left, we need to refetch
-            // all the images
-            if (currentImageExpired && !images.length) {
-              dispatch(BackgroundImageActionCreators.fetch());
-              return;
-            }
-
-            // The image is expired, we need to get a new one from our existing images
-            if (currentImageExpired && images.length > 0) {
-              dispatch(BackgroundImageActionCreators.setNewImage());
-            }
-          }
-
-        });
-      });
-
+      // If theres a background image and its expired. We want to replace it with a new background image
+      if (hasBackgroundImage && getHoursDiff(backgroundImage.createdAt, currentTime) > 5) {
+        this._loadNewBackgroundPicture();
+        return;
+      }
     }
 
     render() {
       const {backgroundImage, fetched, fetching, ...restProps} = this.props;
 
-      if (fetching || !fetched) return <FullPageSpinner />;
+      if (fetching && !fetched) return <FullPageSpinner />;
 
       return <ComposedComponent {...restProps} backgroundImageUrl={backgroundImage.url} />;
     }
+  
+    /**
+     * Loads a new background picture into the extension
+     */
+    _loadNewBackgroundPicture = () => {
+      const {dispatch} = this.props;
+      
+      chrome.storage.sync.get('backgroundImageUrls', (response) => {
+        const {backgroundImageUrls: cachedImages} = response;
+        
+        // If we're out of cached images, we need to fetch more from the API
+        if (!Array.isArray(cachedImages) || !cachedImages.length) {
+          dispatch(BackgroundImageActionCreators.fetch());
+          return;
+        }
+        
+        // Sets a new background image with the existing cached images
+        dispatch(BackgroundImageActionCreators.setNewImage(cachedImages));
+      });
+    };
+
   }
   
   return connect((state) => ({

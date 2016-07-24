@@ -27,9 +27,12 @@ export default {
     };
   },
 
-  setNewImage() {
+  setNewImage(images) {
     return {
-      type: SET_NEW_BACKGROUND_IMAGE
+      type: SET_NEW_BACKGROUND_IMAGE,
+      // This must be named payload for `react-chrome-redux` because
+      // this action will be intercepted by an alias
+      payload: {images}
     };
   },
 
