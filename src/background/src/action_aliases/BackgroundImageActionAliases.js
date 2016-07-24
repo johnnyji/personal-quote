@@ -5,7 +5,7 @@ import BackgroundImageActionCreators from '../action_creators/BackgroundImageAct
 import endpoints from '../utils/http/endpoints';
 import http from '../utils/http';
 
-const fetchBackgroundImage = (action) => {
+const fetchBackgroundImage = () => {
   return (dispatch) => {
     dispatch(BackgroundImageActionCreators.fetching());
 
