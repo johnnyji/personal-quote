@@ -11,7 +11,9 @@ const fetchBackgroundImage = (action) => {
 
     http.get(endpoints.photos)
       .then((response) => {
-        debugger;
+        const image = response.hits[Math.floor(Math.random() * response.hits.length)];
+        // TODO: Cache images in chrome.storage and rotate daily, removing one from array everyday
+        dispatch(BackgroundImageActionCreators.fetchSuccess(image.webformatURL));
       })
       .catch((response) => {
         debugger;

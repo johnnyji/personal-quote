@@ -16,7 +16,8 @@ export default class App extends Component {
   render() {
     return (
       <div className={styles.main}>
-        <h1>Hello My Nigga</h1>
+        <img className={styles.backgroundImage} src={this.props.backgroundImageUrl} />
+        <h1 className={styles.mainText}>Hello My Nigga</h1>
       </div>
     );
   }
