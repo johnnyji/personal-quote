@@ -2,8 +2,8 @@ import camelCaseObject from 'camelcase-object';
 
 const buildHeaders = () => {
   return {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
+    'Accept': 'application/json'
+    // 'Content-Type': 'application/json'
   };
 };
 
@@ -12,7 +12,7 @@ const http = {
   delete(path, data = {}) {
     return new Promise((resolve, reject) => {
       return fetch(path, {
-        credentials: 'include',
+        // credentials: 'include',
         method: 'delete',
         headers: buildHeaders(),
         data: JSON.stringify(data)
@@ -37,7 +37,7 @@ const http = {
   get(path) {
     return new Promise((resolve, reject) => {
       return fetch(path, {
-        credentials: 'include',
+        // credentials: 'include',
         headers: buildHeaders()
       })
         .then((response) => {
@@ -61,7 +61,7 @@ const http = {
     return new Promise((resolve, reject) => {
       return fetch(path, {
         // This is important to persist session data (userId)
-        credentials: 'include',
+        // credentials: 'include',
         method: 'post',
         headers: buildHeaders(),
         body: JSON.stringify(data)

@@ -12,7 +12,6 @@ const store = new Store({
 });
 
 const unsubscribe = store.subscribe(() => {
-  debugger;
   unsubscribe();
   render(
     <Provider store={store}>

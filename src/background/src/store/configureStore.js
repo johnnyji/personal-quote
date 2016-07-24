@@ -1,6 +1,6 @@
 import {applyMiddleware, createStore} from 'redux';
-// import {alias} from 'react-chrome-redux';
-// import actionAliases from '../action_aliases/BackgroundImageActionAliases';
+import {alias} from 'react-chrome-redux';
+import actionAliases from '../action_aliases';
 import logger from 'redux-logger';
 import reducers from '../reducers';
 import thunk from 'redux-thunk';
@@ -9,7 +9,7 @@ import thunk from 'redux-thunk';
 const middleware = applyMiddleware(
   // Aliases actions for react-chrome-redux,
   // See: https://github.com/tshaddix/react-chrome-redux/wiki/Advanced-Usage
-  // alias(actionAliases),
+  alias(actionAliases),
   thunk,
   logger()
 );

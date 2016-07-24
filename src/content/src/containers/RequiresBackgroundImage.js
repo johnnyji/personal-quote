@@ -11,39 +11,29 @@ export default (ComposedComponent) => {
 
     static propTypes = {
       dispatch: PropTypes.func.isRequired,
+      fetched: PropTypes.bool.isRequired,
       fetching: PropTypes.bool.isRequired,
       backgroundImageUrl: PropTypes.string
     };
 
     componentWillMount() {
       if (!this.props.fetching) {
-        debugger;
-        this.props.dispatch({type: 'FETCH_BACKGROUND_IMAGE'});
-
-        // this.props.dispatch(BackgroundImageActionCreators.fetch())
-        //   .then((response) => {
-        //     debugger;
-        //   })
-        //   .catch((response) => {
-        //     debugger;
-        //   });
+        this.props.dispatch(BackgroundImageActionCreators.fetch());
       }
     }
 
     render() {
-      const {fetching, ...restProps} = this.props;
+      const {fetched, fetching, ...restProps} = this.props;
 
-      if (fetching) return <FullPageSpinner />;
+      if (fetching || !fetched) return <FullPageSpinner />;
 
       return <ComposedComponent {...restProps} />;
     }
   }
   
-  return connect((state) => {
-    debugger;
-    return {
-      fetching: state.backgroundImage.fetching,
-      backgroundImageUrl: state.backgroundImage.backgroundImageUrl
-    };
-  })(RequiresBackgroundImage);
+  return connect((state) => ({
+    fetched: state.backgroundImage.fetched,
+    fetching: state.backgroundImage.fetching,
+    backgroundImageUrl: state.backgroundImage.backgroundImageUrl
+  }))(RequiresBackgroundImage);
 };
