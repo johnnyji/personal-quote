@@ -13,6 +13,9 @@
     "persistent": false
   },
   "permissions": [
-    "storage"
+    "identity",
+    "storage",
+    "tabs",
+    "https://api.medium.com/v1/*"
   ]
 }
