@@ -2,6 +2,12 @@ import config from '../../../../../config';
 
 export default {
   auth: {
+    facebook: {
+      oauthStepOne: 'https://www.facebook.com/dialog/oauth?' +
+        `client_id=${config.facebook.clientId}` +
+        `&state=${config.facebook.confirmString}` +
+        `&redirect_uri=${chrome.identity.getRedirectURL(config.facebook.redirectPath)}`
+    },
     medium: {
       oauthStepOne: 'https://medium.com/m/oauth/authorize' +
         `?client_id=${config.medium.clientId}` +

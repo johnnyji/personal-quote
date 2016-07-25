@@ -3,12 +3,12 @@ import AuthActionCreators from '../../../background/src/action_creators/AuthActi
 import pureRender from 'pure-render-decorator';
 import Quote from './Quote';
 import RequiresBackgroundImage from '../containers/RequiresBackgroundImage';
-import RequiresMediumAuth from '../containers/RequiresMediumAuth';
+import RequiresFacebookAuth from '../containers/RequiresFacebookAuth';
 import styles from '../../scss/App.scss';
 
 @pureRender
 @RequiresBackgroundImage
-@RequiresMediumAuth
+@RequiresFacebookAuth
 export default class App extends Component {
 
   static displayName = 'App';
@@ -37,17 +37,17 @@ export default class App extends Component {
       return (
         <button
           disabled={fetchingUser}
-          onClick={this._handleAuthMedium}>
-          {fetchingUser ? 'Loading...' : 'Login With Medium'}
+          onClick={this._handleAuthFacebook}>
+          {fetchingUser ? 'Loading...' : 'Login With Facebook'}
         </button>
      );
     }
 
-    return <Quote className={styles.mainText} />;
+    return <Quote className={styles.mainText} text={currentUser.name} />;
   };
 
-  _handleAuthMedium = () => {
-    this.props.dispatch(AuthActionCreators.authMedium());
+  _handleAuthFacebook = () => {
+    this.props.dispatch(AuthActionCreators.authFacebook());
   };
 
 }

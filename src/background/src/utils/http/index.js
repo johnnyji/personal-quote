@@ -1,10 +1,9 @@
 import camelCaseObject from 'camelcase-object';
 
-const buildHeaders = () => {
-  return {
+const buildHeaders = (headers) => {
+  return Object.assign({}, {
     'Accept': 'application/json'
-    // 'Content-Type': 'application/json'
-  };
+  }, headers);
 };
 
 const http = {
@@ -34,11 +33,11 @@ const http = {
     });
   },
 
-  get(path) {
+  get(path, headers = {}) {
     return new Promise((resolve, reject) => {
       return fetch(path, {
         // credentials: 'include',
-        headers: buildHeaders()
+        headers: buildHeaders(headers)
       })
         .then((response) => {
           // We must retrieve the status first, it will be lost after we call `response.json`
