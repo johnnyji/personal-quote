@@ -1,23 +1,24 @@
 import {
-  AUTH_SUCCESS
+  AUTH_MEDIUM_PENDING
 } from '../action_types/AuthActionTypes';
 import createReducer from 'create-reducer-redux';
-import Immutable from 'immutable';
 
-const initialState = Immutable.fromJS({
-  currentUser: null
-});
+const initialState = {
+  currentUser: null,
+  fetched: false,
+  fetching: false
+};
 
 export default createReducer(initialState, {
 
   name: 'Auth',
 
   handlers: {
-    onAuth: [AUTH_SUCCESS]
+    onAuthPending: [AUTH_MEDIUM_PENDING]
   },
 
-  onAuth(state, {currentUser}) {
-    return state.set('currentUser', Immutable.fromJS(currentUser));
+  onAuthPending(state) {
+    return {...state, fetched: false, fetching: true};
   }
 
 });

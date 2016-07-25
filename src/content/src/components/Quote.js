@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
 import pureRender from 'pure-render-decorator';
+import RequiresMediumAuth from '../containers/RequiresMediumAuth';
 import styles from '../../scss/Quote.scss';
 
-@RequiresMediumAuth
 @pureRender
 export default class Quote extends Component {
 

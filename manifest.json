@@ -16,6 +16,7 @@
     "identity",
     "storage",
     "tabs",
-    "https://api.medium.com/v1/*"
+    "https://api.medium.com/*",
+    "https://medium.com/*"
   ]
 }
