@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import pureRender from 'pure-render-decorator';
+import Quote from './Quote';
 import RequiresBackgroundImage from '../containers/RequiresBackgroundImage';
 import styles from '../../scss/App.scss';
 
@@ -17,7 +18,7 @@ export default class App extends Component {
     return (
       <div className={styles.main}>
         <img className={styles.backgroundImage} src={this.props.backgroundImageUrl} />
-        <h1 className={styles.mainText}>Hello My Nigga</h1>
+        <Quote className={styles.mainText} />
       </div>
     );
   }
