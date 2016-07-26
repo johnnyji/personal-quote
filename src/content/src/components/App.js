@@ -3,12 +3,12 @@ import AuthActionCreators from '../../../background/src/action_creators/AuthActi
 import pureRender from 'pure-render-decorator';
 import Quote from './Quote';
 import RequiresBackgroundImage from '../containers/RequiresBackgroundImage';
-import RequiresFacebookAuth from '../containers/RequiresFacebookAuth';
+import RequiresRedditAuth from '../containers/RequiresRedditAuth';
 import styles from '../../scss/App.scss';
 
 @pureRender
 @RequiresBackgroundImage
-@RequiresFacebookAuth
+@RequiresRedditAuth
 export default class App extends Component {
 
   static displayName = 'App';
@@ -35,19 +35,30 @@ export default class App extends Component {
 
     if (!currentUser) {
       return (
-        <button
-          disabled={fetchingUser}
-          onClick={this._handleAuthFacebook}>
-          {fetchingUser ? 'Loading...' : 'Login With Facebook'}
-        </button>
+        <div>
+          <button
+            disabled={fetchingUser}
+            onClick={this._handleAuthMedium}>
+            {fetchingUser ? 'Loading...' : 'Login With Medium'}
+          </button>
+          <button
+            disabled={fetchingUser}
+            onClick={this._handleAuthReddit}>
+            {fetchingUser ? 'Loading...' : 'Login With Reddit'}
+          </button>
+        </div>
      );
     }
 
     return <Quote className={styles.mainText} text={currentUser.name} />;
   };
 
-  _handleAuthFacebook = () => {
-    this.props.dispatch(AuthActionCreators.authFacebook());
+  _handleAuthMedium = () => {
+    this.props.dispatch(AuthActionCreators.authMedium());
+  };
+
+  _handleAuthReddit = () => {
+    this.props.dispatch(AuthActionCreators.authReddit());
   };
 
 }

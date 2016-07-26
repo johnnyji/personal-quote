@@ -16,7 +16,10 @@
     "identity",
     "storage",
     "tabs",
+    "https://graph.facebook.com/*",
+    "https://www.facebook.com/*",
     "https://api.medium.com/*",
-    "https://medium.com/*"
+    "https://medium.com/*",
+    "https://www.reddit.com/*"
   ]
 }

@@ -1,12 +1,59 @@
 import {
   AUTH_FACEBOOK,
-  AUTH_MEDIUM
+  AUTH_MEDIUM,
+  AUTH_REDDIT
 } from '../action_types/AuthActionTypes';
 import AuthActionCreators from '../action_creators/AuthActionCreators';
 import config from '../../../../config';
 import endpoints from '../utils/http/endpoints';
 import http from '../utils/http';
 import parseQuery from '../utils/http/parseQuery';
+
+const authenticateThroughReddit = () => {
+  return (dispatch) => {
+    // Set the auth state to pending so the extension page can show a
+    // loading icon
+    dispatch(AuthActionCreators.authRedditPending());
+    
+    // The URL to initiate the Reddit OAuth process
+    const oauthUrl = endpoints.auth.reddit.oauthStepOne;
+
+    // Launches OAuth auth flow for Reddit
+    chrome.identity.launchWebAuthFlow({url: oauthUrl, interactive: true}, (responseUrl) => {
+      const {error, code, state} = parseQuery(responseUrl);
+
+      // The response was not correct
+      if (state !== config.reddit.confirmString || error) {
+        dispatch(AuthActionCreators.authRedditError('We couldn\'t properly authenticate your Reddit account.'));
+        return;
+      }
+
+      const encodedAuthHeader = btoa(`${config.medium.clientId}:${config.medium.clientSecret}`);
+
+      fetch(endpoints.auth.reddit.oauthStepTwo, {
+        // credentials: 'include',
+        headers: {
+          // Authorization header not being sent due to CORS: https://jvaneyck.wordpress.com/2014/01/07/cross-domain-requests-in-javascript/
+          'Authorization': `Basic ${config.medium.clientId}:${config.medium.clientSecret}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'post',
+        mode: 'no-cors',
+        body: 'grant_type=authorization_code' +
+          `&code=${code}` +
+          `&redirect_uri=${chrome.identity.getRedirectURL(config.reddit.redirectPath)}`
+      })
+        .then((response) => response.text())
+        .then((response) => {
+          debugger;
+        })
+        .catch((err) => {
+          debugger;
+        });
+
+    });
+  };
+};
 
 // TODO: Refactor to use Rx Observables
 const authenticateThroughFacebook = () => {
@@ -111,9 +158,8 @@ const authenticateThroughMedium = () => {
       fetch(endpoints.auth.medium.oauthStepTwo, {
         method: 'post',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
-          'Accept-Charset': 'utf-8'
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body
       })
@@ -130,5 +176,6 @@ const authenticateThroughMedium = () => {
 
 export default {
   [AUTH_FACEBOOK]: authenticateThroughFacebook,
-  [AUTH_MEDIUM]: authenticateThroughMedium
+  [AUTH_MEDIUM]: authenticateThroughMedium,
+  [AUTH_REDDIT]: authenticateThroughReddit
 };
