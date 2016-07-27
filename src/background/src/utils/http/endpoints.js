@@ -19,18 +19,39 @@ export default {
       oauthStepTwo: `${config.medium.apiPath}/tokens`
     },
     reddit: {
-      oauthStepOne: 'https://www.reddit.com/api/v1/authorize' +
+      oauthStepOne: 'https://ssl.reddit.com/api/v1/authorize' +
         `?client_id=${config.reddit.clientId}` +
         '&response_type=code' +
         `&state=${config.reddit.confirmString}` +
         `&redirect_uri=${chrome.identity.getRedirectURL(config.reddit.redirectPath)}` +
         '&duration=permanent' +
         '&scope=identity mysubreddits read',
-      oauthStepTwo: 'https://www.reddit.com/api/v1/access_token'
+      oauthStepTwo: 'https://ssl.reddit.com/api/v1/access_token'
     },
     twitter: {
       oauthStepOne: 'https://api.twitter.com/oauth/request_token'
     }
   },
-  photos: 'https://pixabay.com/api/?key=2973776-27d95f979eadaac9e23600307&q=rain&image_type=photo&pretty=true'
+  photos: 'https://pixabay.com/api/?key=2973776-27d95f979eadaac9e23600307&q=rain&image_type=photo&pretty=true',
+  wordnik: {
+    randomWords: 'http://api.wordnik.com:80/v4/words.json/randomWords' +
+      '?hasDictionaryDef=true' +
+      '&minCorpusCount=0' +
+      '&maxCorpusCount=-1' +
+      '&minDictionaryCount=1' +
+      '&maxDictionaryCount=-1' +
+      '&minLength=5' +
+      '&maxLength=-1' +
+      '&limit=10' +
+      `&api_key=${config.wordnik.apiKey}`,
+    word: {
+      definitions: (word) => `http://api.wordnik.com:80/v4/word.json/${word}/definitions` +
+        '?limit=3&includeRelated=false&sourceDictionaries=all' +
+        '&useCanonical=true&includeTags=false' +
+        `&api_key=${config.wordnik.apiKey}`,
+      pronunciation: (word) => `http://api.wordnik.com:80/v4/word.json/${word}/pronunciations` +
+        `?useCanonical=false&typeFormat=ahd&limit=1` +
+        `&api_key=${config.wordnik.apiKey}`
+    }
+  }
 };

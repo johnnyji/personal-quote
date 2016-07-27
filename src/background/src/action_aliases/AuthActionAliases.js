@@ -28,14 +28,12 @@ const authenticateThroughReddit = () => {
         return;
       }
 
-      const encodedAuthHeader = btoa(`${config.medium.clientId}:${config.medium.clientSecret}`);
+      const encodedAuthorization = btoa(`${config.reddit.clientId}:`);
 
       fetch(endpoints.auth.reddit.oauthStepTwo, {
-        // credentials: 'include',
+        credentials: 'include',
         headers: {
-          // Authorization header not being sent due to CORS: https://jvaneyck.wordpress.com/2014/01/07/cross-domain-requests-in-javascript/
-          'Authorization': `Basic ${config.medium.clientId}:${config.medium.clientSecret}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Authorization': encodedAuthorization
         },
         method: 'post',
         mode: 'no-cors',
@@ -142,25 +140,34 @@ const authenticateThroughMedium = () => {
 
     // Launches OAuth2.0 auth flow for www.medium.com
     chrome.identity.launchWebAuthFlow({url, interactive: true}, (responseUrl) => {
-      const query = parseQuery(responseUrl);
+      const {error, code, state} = parseQuery(responseUrl);
 
-      // If theres an error with the oauth authentication, we need to display it
-      // to the user
-      if (Object.prototype.hasOwnProperty.call(query, 'error')) {
-        dispatch(AuthActionCreators.authMediumError(query.error));
+      // Error with OAuth
+      if (error) {
+        dispatch(AuthActionCreators.authMediumError(error));
         return;
       }
 
-      const body = `code=${query.code}&client_id=${config.medium.clientId}` +
+      // Request was tampered with
+      if (state !== config.medium.confirmString) {
+        dispatch(AuthActionCreators.authMediumError('Unable to authenticate. Please try again.'));
+        return;
+      }
+
+      const body = `code=${code}&client_id=${config.medium.clientId}` +
         `&client_secret=${config.medium.clientSecret}&grant_type=authorization_code` +
         `&redirect_uri=${chrome.identity.getRedirectURL(config.medium.redirectPath)}`;
 
       fetch(endpoints.auth.medium.oauthStepTwo, {
+        credentials: 'include',
         method: 'post',
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Accept': 'application/json',
+          'Accept-Charset': 'utf-8',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Host': 'api.medium.com:443'
         },
+        // mode: 'no-cors',
         body
       })
         .then((response) => response.json())

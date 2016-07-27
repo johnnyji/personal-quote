@@ -31,6 +31,8 @@ const fetchBackgroundImage = () => {
 
 const setBackgroundImage = ({payload: {images}}) => {
   return (dispatch) => {
+    dispatch(BackgroundImageActionCreators.setNewImagePending());
+
     // Gets a random image from the cached images
     const randIndex = Math.floor(Math.random() * images.length);
     const image = images[randIndex];

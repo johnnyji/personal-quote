@@ -22,9 +22,7 @@ export default (ComposedComponent) => {
 
     componentWillMount() {
       const {backgroundImage, fetching} = this.props;
-      const hasBackgroundImage = backgroundImage &&
-        Object.prototype.hasOwnProperty.call(backgroundImage, 'url') &&
-        Object.prototype.hasOwnProperty.call(backgroundImage, 'createdAt');
+      const hasBackgroundImage = backgroundImage && backgroundImage.url && backgroundImage.createdAt;
       const currentTime = new Date().toISOString();
 
       // If we're already fetching for background pictures, don;t do anything
@@ -37,7 +35,7 @@ export default (ComposedComponent) => {
       }
 
       // If theres a background image and its expired. We want to replace it with a new background image
-      if (hasBackgroundImage && getHoursDiff(backgroundImage.createdAt, currentTime) > 5) {
+      if (hasBackgroundImage && getHoursDiff(currentTime, backgroundImage.createdAt) > 5) {
         this._loadNewBackgroundPicture();
         return;
       }

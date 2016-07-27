@@ -3,6 +3,7 @@ import {
   FETCH_BACKGROUND_IMAGE_PENDING,
   FETCH_BACKGROUND_IMAGE_SUCCESS,
   SET_NEW_BACKGROUND_IMAGE,
+  SET_NEW_BACKGROUND_IMAGE_PENDING,
   SET_NEW_BACKGROUND_IMAGE_SUCCESS
 } from '../action_types/BackgroundImageActionTypes';
 
@@ -33,6 +34,12 @@ export default {
       // This must be named payload for `react-chrome-redux` because
       // this action will be intercepted by an alias
       payload: {images}
+    };
+  },
+
+  setNewImagePending() {
+    return {
+      type: SET_NEW_BACKGROUND_IMAGE_PENDING
     };
   },
 

@@ -2,9 +2,11 @@ import {PropTypes} from 'react';
 
 export default {
 
-  user: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string
+  word: PropTypes.shape({
+    createdAt: PropTypes.string.isRequired,
+    definition: PropTypes.string.isRequired,
+    pronunciation: PropTypes.string.isRequired,
+    word: PropTypes.string.isRequired
   })
 
 };
