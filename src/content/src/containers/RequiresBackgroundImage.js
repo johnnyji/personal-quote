@@ -21,30 +21,39 @@ export default (ComposedComponent) => {
     };
 
     componentWillMount() {
-      const {backgroundImage, fetching} = this.props;
-      const hasBackgroundImage = backgroundImage && backgroundImage.url && backgroundImage.createdAt;
-      const currentTime = new Date().toISOString();
+      const {backgroundImage, dispatch, fetching} = this.props;
 
-      // If we're already fetching for background pictures, don;t do anything
-      if (fetching) return;
+      if (fetching || backgroundImage) return;
 
-      // If there's no background image, load it in from storage
-      if (!hasBackgroundImage) {
-        this._loadNewBackgroundPicture();
-        return;
-      }
+      dispatch(BackgroundImageActionCreators.fetching());
 
-      // If theres a background image and its expired. We want to replace it with a new background image
-      if (hasBackgroundImage && getHoursDiff(currentTime, backgroundImage.createdAt) > 5) {
-        this._loadNewBackgroundPicture();
-        return;
-      }
+      chrome.storage.sync.get('currentBackgroundImage', ({currentBackgroundImage: backgroundImage}) => {
+        const hasBackgroundImage = backgroundImage && backgroundImage.url && backgroundImage.createdAt;
+        const currentTime = new Date().toISOString();
+
+        // If there's no background image, load it in from storage
+        if (!hasBackgroundImage) {
+          this._loadNewBackgroundPicture();
+          return;
+        }
+
+        // If theres a background image and its expired. We want to replace it with a new background image
+        if (hasBackgroundImage && getHoursDiff(currentTime, backgroundImage.createdAt) > 5) {
+          this._loadNewBackgroundPicture();
+          return;
+        }
+
+        // If we have the background image and it still seems to be valid, we
+        // want to set it in the store
+        dispatch(BackgroundImageActionCreators.setNewImageSuccess(backgroundImage));
+      });
     }
+
 
     render() {
       const {backgroundImage, fetched, fetching, ...restProps} = this.props;
 
-      if (fetching && !fetched) return <FullPageSpinner />;
+      if (fetching || !fetched) return <FullPageSpinner />;
 
       return <ComposedComponent {...restProps} backgroundImageUrl={backgroundImage.url} />;
     }

@@ -1,10 +1,11 @@
-import auth from './AuthActionAliases';
+// import auth from './AuthActionAliases';
 import backgroundImage from './BackgroundImageActionAliases';
+import words from './WordsActionAliases';
 
 const aliases = Object.assign(
   {},
-  auth,
-  backgroundImage
+  backgroundImage,
+  words
 );
 
 export default aliases;

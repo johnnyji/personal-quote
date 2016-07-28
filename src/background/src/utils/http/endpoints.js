@@ -38,7 +38,7 @@ export default {
       '?hasDictionaryDef=true' +
       '&minCorpusCount=0' +
       '&maxCorpusCount=-1' +
-      '&minDictionaryCount=1' +
+      '&minDictionaryCount=2' +
       '&maxDictionaryCount=-1' +
       '&minLength=5' +
       '&maxLength=-1' +
@@ -46,11 +46,11 @@ export default {
       `&api_key=${config.wordnik.apiKey}`,
     word: {
       definitions: (word) => `http://api.wordnik.com:80/v4/word.json/${word}/definitions` +
-        '?limit=3&includeRelated=false&sourceDictionaries=all' +
+        '?limit=200&includeRelated=false&sourceDictionaries=all' +
         '&useCanonical=true&includeTags=false' +
         `&api_key=${config.wordnik.apiKey}`,
       pronunciation: (word) => `http://api.wordnik.com:80/v4/word.json/${word}/pronunciations` +
-        `?useCanonical=false&typeFormat=ahd&limit=1` +
+        `?useCanonical=true&typeFormat=ahd&limit=200` +
         `&api_key=${config.wordnik.apiKey}`
     }
   }

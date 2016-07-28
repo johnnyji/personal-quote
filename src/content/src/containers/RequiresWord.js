@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import CustomPropTypes from '../utils/CustomPropTypes';
 import FullPageSpinner from '../components/ui/FullPageSpinner';
 import getHoursDiff from '../utils/getHoursDiff';
 import WordsActionCreators from '../../../background/src/action_creators/WordsActionCreators';
@@ -14,31 +15,38 @@ export default (ComposedComponent) => {
       dispatch: PropTypes.func.isRequired,
       fetched: PropTypes.bool.isRequired,
       fetching: PropTypes.bool.isRequired,
-      word: PropTypes.shape({
-        createdAt: PropTypes.string.isRequired,
-        word: PropTypes.string.isRequired
-      })
+      word: CustomPropTypes.word
     };
 
     componentWillMount() {
-      const {word, fetching} = this.props;
-      const hasWord = word && word.url && word.createdAt;
-      const currentTime = new Date().toISOString();
+      const {dispatch, fetching, word} = this.props;
 
-      // If we're already fetching for more words, don't do anything
-      if (fetching) return;
+      if (fetching || word) return;
 
-      // If there's no current word, load it in from storage
-      if (!hasWord) {
-        this._loadNewWordOfTheDay();
-        return;
-      }
+      // Because accessing chrome storage is asynchronous, it may be delayed beyond the initial
+      // render cycle, therefore we must start fetching beforehand so the user will see a spinner
+      // as we're trying to access data
+      dispatch(WordsActionCreators.fetching());
 
-      // If theres a current word and its expired. We want to replace it with a new word
-      if (hasWord && getHoursDiff(word.createdAt, currentTime) > 8) {
-        this._loadNewWordOfTheDay();
-        return;
-      }
+      chrome.storage.sync.get('currentWord', ({currentWord: word}) => {
+        const hasWord = word && word.url && word.createdAt;
+        const currentTime = new Date().toISOString();
+
+        // If there's no current word, load it in from storage
+        if (!hasWord) {
+          this._loadNewWordOfTheDay();
+          return;
+        }
+
+        // If theres a current word and its expired. We want to replace it with a new word
+        if (hasWord && getHoursDiff(word.createdAt, currentTime) > 8) {
+          this._loadNewWordOfTheDay();
+          return;
+        }
+
+        // If we have the word and its still valid, we just set it in store
+        dispatch(WordsActionCreators.setNewWordSuccess(word));
+      });
     }
 
     render() {
@@ -64,7 +72,7 @@ export default (ComposedComponent) => {
         }
         
         // Sets a new word of the day with the existing cached words
-        dispatch(WordsActionCreators.fetchSuccess(cachedWords));
+        dispatch(WordsActionCreators.setNewWord(cachedWords));
       });
     };
 

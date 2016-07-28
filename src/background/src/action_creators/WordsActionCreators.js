@@ -37,13 +37,13 @@ export default {
     };
   },
 
-  setWordPending() {
+  setNewWordPending() {
     return {
       type: SET_NEW_WORD_PENDING
     };
   },
 
-  setWordSuccess(word) {
+  setNewWordSuccess(word) {
     return {
       type: SET_NEW_WORD_SUCCESS,
       data: {word}
