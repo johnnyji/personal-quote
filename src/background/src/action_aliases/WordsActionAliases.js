@@ -29,7 +29,7 @@ const fetchWords = () => {
                   word: words[i]
                 };
               })
-              .filter(({definitions}) => definitions.length > 0);
+              .filter(({definitions}) => definitions.length > 1);
             
             // We add a date timestamp to the newly set word so we know when
             // to replace it

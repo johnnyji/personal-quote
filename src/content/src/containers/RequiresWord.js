@@ -52,7 +52,7 @@ export default (ComposedComponent) => {
     render() {
       const {word, fetched, fetching, ...restProps} = this.props;
 
-      if (fetching && !fetched) return <FullPageSpinner />;
+      if (fetching || !fetched) return <FullPageSpinner />;
 
       return <ComposedComponent {...restProps} word={word} />;
     }

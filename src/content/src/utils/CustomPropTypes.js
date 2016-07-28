@@ -4,8 +4,9 @@ export default {
 
   word: PropTypes.shape({
     createdAt: PropTypes.string.isRequired,
-    definition: PropTypes.string.isRequired,
-    pronunciation: PropTypes.string.isRequired,
+    definitions: PropTypes.arrayOf(
+      PropTypes.string.isRequired
+    ).isRequired,
     word: PropTypes.string.isRequired
   })
 

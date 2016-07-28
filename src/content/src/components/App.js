@@ -1,8 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import AuthActionCreators from '../../../background/src/action_creators/AuthActionCreators';
 import CustomPropTypes from '../utils/CustomPropTypes';
 import pureRender from 'pure-render-decorator';
-import Quote from './Quote';
 import RequiresBackgroundImage from '../containers/RequiresBackgroundImage';
 import RequiresWord from '../containers/RequiresWord';
 import styles from '../../scss/App.scss';
@@ -21,7 +19,6 @@ export default class App extends Component {
   };
 
   render() {
-    debugger;
     return (
       <div className={styles.main}>
         <img className={styles.backgroundImage} src={this.props.backgroundImageUrl} />
@@ -31,7 +28,20 @@ export default class App extends Component {
   }
 
   _renderContent = () => {
-    return <Quote className={styles.mainText} text={this.props.word} />;
+    const {word} = this.props;
+
+    return (
+      <div>
+        <h1>{word.word}</h1>
+        <section>
+          {word.definitions.map((definition, i) => (
+            <div key={i}>
+              {definition}
+            </div>
+          ))}
+        </section>
+      </div>
+    );
   };
 
 }
