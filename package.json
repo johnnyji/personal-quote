@@ -5,6 +5,7 @@
   "description": "A personal quote tab",
   "scripts": {
     "clean": "rm -rf ./build",
+    "eslint": "eslint ./src",
     "server-dev": "webpack --watch --progress --colors --display-error-details -d --config ./webpack/webpack.config.js",
     "validate-webpack": "webpack-validator ./webpack/webpack.config.js"
   },
