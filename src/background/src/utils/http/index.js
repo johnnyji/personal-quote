@@ -6,6 +6,17 @@ const buildHeaders = (headers) => {
   }, headers);
 };
 
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+  var error = new Error(response.statusText);
+  error.response = response;
+  throw error;
+};
+ 
+export const parseJson = (response) => response.json();
+
 const http = {
 
   delete(path, data = {}) {

@@ -32,7 +32,8 @@ export default {
   //     oauthStepOne: 'https://api.twitter.com/oauth/request_token'
   //   }
   // },
-  photos: 'https://pixabay.com/api/?key=2973776-27d95f979eadaac9e23600307&q=rain&image_type=photo&pretty=true',
+  // photos: 'https://pixabay.com/api/?key=2973776-27d95f979eadaac9e23600307&q=rain&image_type=photo&pretty=true',
+  photos: 'http://api.pexels.com/v1/popular?per_page=15&page=1',
   wordnik: {
     randomWords: 'http://api.wordnik.com:80/v4/words.json/randomWords' +
       '?hasDictionaryDef=true' +

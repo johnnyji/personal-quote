@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import BackgroundImageActionCreators from '../../../background/src/action_creators/BackgroundImageActionCreators';
 import {connect} from 'react-redux';
+import CustomPropTypes from '../utils/CustomPropTypes';
 import FullPageSpinner from '../components/ui/FullPageSpinner';
 import getHoursDiff from '../utils/getHoursDiff';
 
@@ -14,10 +15,7 @@ export default (ComposedComponent) => {
       dispatch: PropTypes.func.isRequired,
       fetched: PropTypes.bool.isRequired,
       fetching: PropTypes.bool.isRequired,
-      backgroundImage: PropTypes.shape({
-        createdAt: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired
-      })
+      backgroundImage: CustomPropTypes.image,
     };
 
     componentWillMount() {
@@ -28,7 +26,7 @@ export default (ComposedComponent) => {
       dispatch(BackgroundImageActionCreators.fetching());
 
       chrome.storage.sync.get('currentBackgroundImage', ({currentBackgroundImage: backgroundImage}) => {
-        const hasBackgroundImage = backgroundImage && backgroundImage.url && backgroundImage.createdAt;
+        const hasBackgroundImage = backgroundImage && backgroundImage.url && backgroundImage.setAt;
         const currentTime = new Date().toISOString();
 
         // If there's no background image, load it in from storage
@@ -38,7 +36,7 @@ export default (ComposedComponent) => {
         }
 
         // If theres a background image and its expired. We want to replace it with a new background image
-        if (hasBackgroundImage && getHoursDiff(currentTime, backgroundImage.createdAt) > 5) {
+        if (hasBackgroundImage && getHoursDiff(currentTime, backgroundImage.setAt) > 8) {
           this._loadNewBackgroundPicture();
           return;
         }
@@ -64,9 +62,7 @@ export default (ComposedComponent) => {
     _loadNewBackgroundPicture = () => {
       const {dispatch} = this.props;
       
-      chrome.storage.sync.get('backgroundImageUrls', (response) => {
-        const {backgroundImageUrls: cachedImages} = response;
-        
+      chrome.storage.sync.get('backgroundImages', ({backgroundImages: cachedImages}) => {
         // If we're out of cached images, we need to fetch more from the API
         if (!Array.isArray(cachedImages) || !cachedImages.length) {
           dispatch(BackgroundImageActionCreators.fetch());
