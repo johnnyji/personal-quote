@@ -1,5 +1,6 @@
 import {
   FETCH_BACKGROUND_IMAGE,
+  FETCH_BACKGROUND_IMAGE_ERROR,
   FETCH_BACKGROUND_IMAGE_PENDING,
   FETCH_BACKGROUND_IMAGE_SUCCESS,
   SET_NEW_BACKGROUND_IMAGE,
@@ -18,6 +19,13 @@ export default {
   fetching() {
     return {
       type: FETCH_BACKGROUND_IMAGE_PENDING
+    };
+  },
+
+  fetchError(err) {
+    return {
+      type: FETCH_BACKGROUND_IMAGE_ERROR,
+      data: {err}
     };
   },
 

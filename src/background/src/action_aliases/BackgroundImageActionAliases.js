@@ -11,7 +11,6 @@ const fetchBackgroundImage = () => {
   return (dispatch) => {
     dispatch(BackgroundImageActionCreators.fetching());
 
-    debugger;
     fetch(endpoints.photos, {
       headers: {
         Authorization: config.pexels.apiKey
@@ -31,8 +30,8 @@ const fetchBackgroundImage = () => {
           });
         });
       })
-      .catch((response) => {
-        debugger;
+      .catch((err) => {
+        dispatch(BackgroundImageActionCreators.fetchError(err));
       });
   };
 };
