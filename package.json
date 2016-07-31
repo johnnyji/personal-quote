@@ -15,6 +15,7 @@
     "classnames": "^2.2.5",
     "create-reducer-redux": "^1.0.4",
     "immutable": "^3.8.1",
+    "is-xml": "^0.1.0",
     "moment": "^2.14.1",
     "node-sass": "^3.8.0",
     "node-uuid": "^1.4.7",

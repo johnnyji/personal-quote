@@ -5,6 +5,7 @@ import {
 import WordsActionCreators from '../action_creators/WordsActionCreators';
 import endpoints from '../utils/http/endpoints';
 import http from '../utils/http';
+import isXML from 'is-xml';
 
 /**
  * Fetches words and their definitions for the Wordnik API and
@@ -29,7 +30,11 @@ const fetchWords = () => {
                   word: words[i]
                 };
               })
-              .filter(({definitions}) => definitions.length > 1);
+              .filter(({definitions}) => {
+                // The definition needs to be under 3 characters long
+                const validDefinitions = definitions.filter((def) => def.length < 300 && !isXML(def));
+                return validDefinitions.length > 1;
+              });
             
             // We add a date timestamp to the newly set word so we know when
             // to replace it
@@ -67,7 +72,9 @@ const setNewWord = ({payload: {words}}) => {
 
     // Gets a random word from the cached words
     const randIndex = Math.floor(Math.random() * words.length);
-    const word = words[randIndex];
+    const word = Object.assign(words[randIndex], {
+      createdAt: new Date().toISOString()
+    });
     const restCachedWords = [...words.slice(0, randIndex), ...words.slice(randIndex + 1, words.length)];
 
     chrome.storage.sync.set({currentWord: word}, () => {

@@ -5,6 +5,8 @@ import FullPageSpinner from '../components/ui/FullPageSpinner';
 import getHoursDiff from '../utils/getHoursDiff';
 import WordsActionCreators from '../../../background/src/action_creators/WordsActionCreators';
 
+const EXPIRES_IN = 5;
+
 export default (ComposedComponent) => {
 
   class RequiresWord extends Component {
@@ -20,8 +22,15 @@ export default (ComposedComponent) => {
 
     componentWillMount() {
       const {dispatch, fetching, word} = this.props;
+      const currentTime = new Date().toISOString();
 
-      if (fetching || word) return;
+      if (fetching) return;
+      // If the word has not yet expired
+      if (word && getHoursDiff(currentTime, word.createdAt) <= EXPIRES_IN) return;
+      // If the word has expired
+      if (word && getHoursDiff(currentTime, word.createdAt) > EXPIRES_IN) {
+        this._loadNewWordOfTheDay();
+      }
 
       // Because accessing chrome storage is asynchronous, it may be delayed beyond the initial
       // render cycle, therefore we must start fetching beforehand so the user will see a spinner
@@ -30,7 +39,6 @@ export default (ComposedComponent) => {
 
       chrome.storage.sync.get('currentWord', ({currentWord: word}) => {
         const hasWord = word && word.url && word.createdAt;
-        const currentTime = new Date().toISOString();
 
         // If there's no current word, load it in from storage
         if (!hasWord) {
@@ -39,7 +47,7 @@ export default (ComposedComponent) => {
         }
 
         // If theres a current word and its expired. We want to replace it with a new word
-        if (hasWord && getHoursDiff(word.createdAt, currentTime) > 8) {
+        if (hasWord && getHoursDiff(word.createdAt, currentTime) > EXPIRES_IN) {
           this._loadNewWordOfTheDay();
           return;
         }
