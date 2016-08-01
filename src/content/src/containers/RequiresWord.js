@@ -24,11 +24,18 @@ export default (ComposedComponent) => {
       const {dispatch, fetching, word} = this.props;
       const currentTime = new Date().toISOString();
 
-      if (fetching) return;
+      if (fetching) {
+        console.log('Already fetching');
+        return;
+      }
       // If the word has not yet expired
-      if (word && getHoursDiff(currentTime, word.createdAt) <= EXPIRES_IN) return;
+      if (word && getHoursDiff(currentTime, word.createdAt) <= EXPIRES_IN) {
+        console.log(`There is a word, and it has been active for ${getHoursDiff(currentTime, word.createdAt)} and has NOT expired`);
+        return;
+      }
       // If the word has expired
       if (word && getHoursDiff(currentTime, word.createdAt) > EXPIRES_IN) {
+        console.log(`There is a word, and it has been active for ${getHoursDiff(currentTime, word.createdAt)} and has BEEN expired, should load new word`);
         this._loadNewWordOfTheDay();
       }
 
@@ -40,18 +47,20 @@ export default (ComposedComponent) => {
       chrome.storage.sync.get('currentWord', ({currentWord: word}) => {
         const hasWord = word && word.url && word.createdAt;
 
-        // If there's no current word, load it in from storage
         if (!hasWord) {
+          console.log('No current word from storage, load new word');
           this._loadNewWordOfTheDay();
           return;
         }
 
         // If theres a current word and its expired. We want to replace it with a new word
-        if (hasWord && getHoursDiff(word.createdAt, currentTime) > EXPIRES_IN) {
+        if (hasWord && getHoursDiff(currentTime, word.createdAt) > EXPIRES_IN) {
+          console.log(`There is current word in storage, its been active for ${getHoursDiff(currentTime, word.createdAt)}, load new word`);
           this._loadNewWordOfTheDay();
           return;
         }
 
+        console.log('Word loaded from storage, set word in reducer state');
         // If we have the word and its still valid, we just set it in store
         dispatch(WordsActionCreators.setNewWordSuccess(word));
       });
@@ -75,10 +84,12 @@ export default (ComposedComponent) => {
 
         // If we're out of cached words, we need to fetch more from the API
         if (!Array.isArray(cachedWords) || !cachedWords.length) {
+          console.log('No cached words, gotta fetch a whole new set of words');
           dispatch(WordsActionCreators.fetch());
           return;
         }
         
+        console.log(`There are ${cachedWords.length} cached words, use them to set current word`);
         // Sets a new word of the day with the existing cached words
         dispatch(WordsActionCreators.setNewWord(cachedWords));
       });
