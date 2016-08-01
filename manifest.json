@@ -3,6 +3,11 @@
   "name": "Wordful",
   "description": "A personal quote tab",
   "version": "1.0.0",
+  "icons": {
+    "16": "./assets/icons/icon16.png",
+    "48": "./assets/icons/icon48.png",
+    "128": "./assets/icons/icon128.png"
+  },
   "chrome_url_overrides": {
     "newtab": "tab.html"
   },
