@@ -1,4 +1,6 @@
 import {
+  CHANGE_WORD_CYCLE_ELAPSE,
+  CHANGE_WORD_CYCLE_ELAPSE_SUCCESS,
   FETCH_WORDS,
   FETCH_WORDS_PENDING,
   FETCH_WORDS_SUCCESS,
@@ -8,6 +10,22 @@ import {
 } from '../action_types/WordsActionTypes';
 
 export default {
+
+  changeWordCycleElapse(elapse) {
+    return {
+      type: CHANGE_WORD_CYCLE_ELAPSE,
+      // `react-chrome-redux` requires the data sent to action aliases to be
+      // called `payload`
+      payload: {elapse}
+    };
+  },
+
+  changeWordCycleElapseSuccess(elapse) {
+    return {
+      type: CHANGE_WORD_CYCLE_ELAPSE_SUCCESS,
+      data: {elapse}
+    };
+  },
 
   fetch() {
     return {

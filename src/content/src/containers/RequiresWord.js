@@ -5,8 +5,6 @@ import FullPageSpinner from '../components/ui/FullPageSpinner';
 import getHoursDiff from '../utils/getHoursDiff';
 import WordsActionCreators from '../../../background/src/action_creators/WordsActionCreators';
 
-const EXPIRES_IN = 5;
-
 export default (ComposedComponent) => {
 
   class RequiresWord extends Component {
@@ -17,11 +15,12 @@ export default (ComposedComponent) => {
       dispatch: PropTypes.func.isRequired,
       fetched: PropTypes.bool.isRequired,
       fetching: PropTypes.bool.isRequired,
-      word: CustomPropTypes.word
+      word: CustomPropTypes.word,
+      wordCycleElapse: CustomPropTypes.wordCycleElapse.isRequired
     };
 
     componentWillMount() {
-      const {dispatch, fetching, word} = this.props;
+      const {dispatch, fetching, word, wordCycleElapse} = this.props;
       const currentTime = new Date().toISOString();
 
       if (fetching) {
@@ -29,12 +28,12 @@ export default (ComposedComponent) => {
         return;
       }
       // If the word has not yet expired
-      if (word && getHoursDiff(currentTime, word.createdAt) <= EXPIRES_IN) {
+      if (word && getHoursDiff(currentTime, word.createdAt) <= wordCycleElapse) {
         console.log(`There is a word, and it has been active for ${getHoursDiff(currentTime, word.createdAt)} and has NOT expired`);
         return;
       }
       // If the word has expired
-      if (word && getHoursDiff(currentTime, word.createdAt) > EXPIRES_IN) {
+      if (word && getHoursDiff(currentTime, word.createdAt) > wordCycleElapse) {
         console.log(`There is a word, and it has been active for ${getHoursDiff(currentTime, word.createdAt)} and has BEEN expired, should load new word`);
         this._loadNewWordOfTheDay();
       }
@@ -45,7 +44,7 @@ export default (ComposedComponent) => {
       dispatch(WordsActionCreators.fetching());
 
       chrome.storage.sync.get('currentWord', ({currentWord: word}) => {
-        const hasWord = word && word.url && word.createdAt;
+        const hasWord = word && word.definitions && word.createdAt;
 
         if (!hasWord) {
           console.log('No current word from storage, load new word');
@@ -54,7 +53,7 @@ export default (ComposedComponent) => {
         }
 
         // If theres a current word and its expired. We want to replace it with a new word
-        if (hasWord && getHoursDiff(currentTime, word.createdAt) > EXPIRES_IN) {
+        if (hasWord && getHoursDiff(currentTime, word.createdAt) > wordCycleElapse) {
           console.log(`There is current word in storage, its been active for ${getHoursDiff(currentTime, word.createdAt)}, load new word`);
           this._loadNewWordOfTheDay();
           return;

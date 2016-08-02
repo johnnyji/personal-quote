@@ -20,6 +20,8 @@ export default {
       PropTypes.string.isRequired
     ).isRequired,
     word: PropTypes.string.isRequired
-  })
+  }),
+  
+  wordCycleElapse: PropTypes.oneOf([1, 2, 3, 5, 10, 12, 24])
 
 };

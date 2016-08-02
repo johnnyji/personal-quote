@@ -1,4 +1,5 @@
 import {
+  CHANGE_WORD_CYCLE_ELAPSE_SUCCESS,
   FETCH_WORDS_PENDING,
   FETCH_WORDS_SUCCESS,
   SET_NEW_WORD_PENDING,
@@ -9,7 +10,8 @@ import createReducer from 'create-reducer-redux';
 const initialState = {
   fetched: false,
   fetching: false,
-  word: null
+  word: null,
+  wordCycleElapse: null
 };
 
 export default createReducer(initialState, {
@@ -17,6 +19,7 @@ export default createReducer(initialState, {
   name: 'Words',
 
   handlers: {
+    onChangeWordCycleElapse: [CHANGE_WORD_CYCLE_ELAPSE_SUCCESS],
     onFetching: [
       FETCH_WORDS_PENDING,
       SET_NEW_WORD_PENDING
@@ -25,6 +28,10 @@ export default createReducer(initialState, {
       FETCH_WORDS_SUCCESS,
       SET_NEW_WORD_SUCCESS
     ]
+  },
+
+  onChangeWordCycleElapse(state, {elapse}) {
+    return {...state, wordCycleElapse: elapse};
   },
 
   onFetching(state) {

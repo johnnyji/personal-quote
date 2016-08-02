@@ -1,4 +1,5 @@
 import {
+  CHANGE_WORD_CYCLE_ELAPSE,
   FETCH_WORDS,
   SET_NEW_WORD
 } from '../action_types/WordsActionTypes';
@@ -6,6 +7,15 @@ import WordsActionCreators from '../action_creators/WordsActionCreators';
 import endpoints from '../utils/http/endpoints';
 import http from '../utils/http';
 import isXML from 'is-xml';
+
+const changeWordCycleElapse = ({payload: {elapse}}) => {
+  return (dispatch) => {
+    // Sets the new word elapse in the storage
+    chrome.storage.sync.set({wordCycleElapse: elapse}, () => {
+      dispatch(WordsActionCreators.changeWordCycleElapseSuccess(elapse));
+    });
+  };
+};
 
 /**
  * Fetches words and their definitions for the Wordnik API and
@@ -86,6 +96,7 @@ const setNewWord = ({payload: {words}}) => {
 };
 
 export default {
+  [CHANGE_WORD_CYCLE_ELAPSE]: changeWordCycleElapse,
   [FETCH_WORDS]: fetchWords,
   [SET_NEW_WORD]: setNewWord
 };
