@@ -5,6 +5,7 @@ import RequiresWord from '../containers/RequiresWord';
 import RequiresWordCycleElapse from '../containers/RequiresWordCycleElapse';
 import styles from '../../scss/App.scss';
 import WordsActionCreators from '../../../background/src/action_creators/WordsActionCreators';
+import {WORD_CYCLE_ELAPSES} from '../utils/config';
 
 @RequiresWordCycleElapse
 @RequiresWord
@@ -29,9 +30,7 @@ export default class App extends Component {
       <div className={styles.main}>
         <section className={styles.wordCycleElapse}>
           <span>New word in</span>
-          <button onClick={this._handleChangeWordCycleElapse}>
-            {wordCycleElapse} hours
-          </button>
+          {this._renderWordCycleElapseOptions()}
         </section>
         <main
           className={styles.content}
@@ -51,6 +50,22 @@ export default class App extends Component {
     );
   }
 
+  _renderWordCycleElapseOptions = () => {
+    const {wordCycleElapse} = this.props;
+
+    return (
+      <select
+        onChange={this._handleChangeWordCycleElapse}
+        value={wordCycleElapse}>
+        {WORD_CYCLE_ELAPSES.map((elapse, i) => (
+          <option disabled={elapse === wordCycleElapse} key={i} value={elapse}>
+            {elapse} {elapse === 1 ? 'hour' : 'hours'}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
   _renderMainContent = () => {
     return (
       <h1 className={styles.word}>
@@ -59,8 +74,8 @@ export default class App extends Component {
     );
   };
 
-  _handleChangeWordCycleElapse = (elapse) => {
-    this.props.dispatch(WordsActionCreators.changeWordCycleElapse(elapse));
+  _handleChangeWordCycleElapse = ({target: {value}}) => {
+    this.props.dispatch(WordsActionCreators.changeWordCycleElapse(Number(value)));
   };
 
 }

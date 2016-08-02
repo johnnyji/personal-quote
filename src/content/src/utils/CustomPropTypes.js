@@ -1,4 +1,5 @@
 import {PropTypes} from 'react';
+import {WORD_CYCLE_ELAPSES} from './config';
 
 export default {
 
@@ -22,6 +23,6 @@ export default {
     word: PropTypes.string.isRequired
   }),
   
-  wordCycleElapse: PropTypes.oneOf([1, 2, 3, 5, 10, 12, 24])
+  wordCycleElapse: PropTypes.oneOf(WORD_CYCLE_ELAPSES)
 
 };

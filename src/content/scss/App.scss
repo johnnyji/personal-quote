@@ -1,14 +1,19 @@
 :local(.main) {
-  left: 48%;
   position: absolute;
-  top: 45%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 :local(.content) {
   display: flex;
   flex-direction: column;
+  left: 48%;
   max-width: 700px;
+  position: absolute;
+  top: 45%;
+  transform: translate(-50%, -50%);
   word-wrap: break-word;
 }
 
@@ -32,4 +37,10 @@
   margin-right: 8px;
   font-weight: 500;
   color: #0000EE;
+}
+
+:local(.wordCycleElapse) {
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
