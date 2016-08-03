@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import './scss/index.scss';
 import App from './src/components/App.js';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {portName} from '../../config';
 import {Provider} from 'react-redux';
 import {render} from 'react-dom';
@@ -14,8 +15,10 @@ const store = new Store({
 const unsubscribe = store.subscribe(() => {
   unsubscribe();
   render(
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <MuiThemeProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </MuiThemeProvider>
   , document.getElementById('app'));
 });

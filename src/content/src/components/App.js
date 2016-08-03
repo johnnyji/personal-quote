@@ -1,11 +1,19 @@
 import React, {Component, PropTypes} from 'react';
 import CustomPropTypes from '../utils/CustomPropTypes';
+import DropdownListItem from './ui/DropdownListItem';
+import Menu from 'material-ui/Menu';
+import Popover from 'material-ui/Popover';
 import pureRender from 'pure-render-decorator';
 import RequiresWord from '../containers/RequiresWord';
 import RequiresWordCycleElapse from '../containers/RequiresWordCycleElapse';
 import styles from '../../scss/App.scss';
 import WordsActionCreators from '../../../background/src/action_creators/WordsActionCreators';
 import {WORD_CYCLE_ELAPSES} from '../utils/config';
+
+const ACTIVE_ELAPSE = {
+  backgroundColor: '#0000EE',
+  color: '#FFF'
+};
 
 @RequiresWordCycleElapse
 @RequiresWord
@@ -20,6 +28,10 @@ export default class App extends Component {
     wordCycleElapse: CustomPropTypes.wordCycleElapse.isRequired
   };
 
+  state = {
+    dropdownIsOpen: false
+  };
+
   render() {
     const {word, wordCycleElapse} = this.props;
     const topDefinitions = word.definitions
@@ -29,7 +41,13 @@ export default class App extends Component {
     return (
       <div className={styles.main}>
         <section className={styles.wordCycleElapse}>
-          <span>New word in</span>
+          <span>New word every</span>
+          <button
+            className={styles.wordCycleElapseButton}
+            onClick={this._handleOpenDropdown}
+            ref={this._setDropdownButtonRef}>
+            {wordCycleElapse} {wordCycleElapse === 1 ? 'hour' : 'hours'}
+          </button>
           {this._renderWordCycleElapseOptions()}
         </section>
         <main
@@ -52,17 +70,29 @@ export default class App extends Component {
 
   _renderWordCycleElapseOptions = () => {
     const {wordCycleElapse} = this.props;
+    const {dropdownIsOpen} = this.state;
+
+    const timeOptions = WORD_CYCLE_ELAPSES.map((elapse, i) => (
+      <DropdownListItem
+        disabled={elapse === wordCycleElapse}
+        key={i}
+        onSelect={this._handleChangeWordCycleElapse}
+        style={elapse === wordCycleElapse ? ACTIVE_ELAPSE : null}
+        value={elapse}>
+        {elapse} {elapse === 1 ? 'hour' : 'hours'}
+      </DropdownListItem>
+    ));
 
     return (
-      <select
-        onChange={this._handleChangeWordCycleElapse}
-        value={wordCycleElapse}>
-        {WORD_CYCLE_ELAPSES.map((elapse, i) => (
-          <option disabled={elapse === wordCycleElapse} key={i} value={elapse}>
-            {elapse} {elapse === 1 ? 'hour' : 'hours'}
-          </option>
-        ))}
-      </select>
+      <Popover
+        anchorEl={this.dropdownAnchorElement}
+        anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+        canAutoPosition={false}
+        open={dropdownIsOpen}
+        onRequestClose={this._handleCloseDropdown}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}>
+        <Menu>{timeOptions}</Menu>
+      </Popover>
     );
   };
 
@@ -74,8 +104,24 @@ export default class App extends Component {
     );
   };
 
-  _handleChangeWordCycleElapse = ({target: {value}}) => {
-    this.props.dispatch(WordsActionCreators.changeWordCycleElapse(Number(value)));
+  _handleChangeWordCycleElapse = (elapse) => {
+    this.props.dispatch(WordsActionCreators.changeWordCycleElapse(elapse));
+
+    setTimeout(() => {
+      this.setState({dropdownIsOpen: false});
+    }, 200);
+  };
+
+  _handleCloseDropdown = () => {
+    this.setState({dropdownIsOpen: false});
+  };
+
+  _handleOpenDropdown = () => {
+    this.setState({dropdownIsOpen: true});
+  };
+
+  _setDropdownButtonRef = (node) => {
+    this.dropdownAnchorElement = node;
   };
 
 }
