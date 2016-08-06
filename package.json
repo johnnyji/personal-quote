@@ -5,6 +5,8 @@
   "description": "A personal quote tab",
   "scripts": {
     "clean": "rm -rf ./build",
+
+    "deploy": "zip -r ../wordcipher.zip . -x node_modules/\\* -x webpack/\\* -x src/\\* -x .\\* -x config.example.js",
     "eslint": "eslint ./src",
     "server-dev": "webpack --watch --progress --colors --display-error-details -d --config ./webpack/webpack.config.js",
     "validate-webpack": "webpack-validator ./webpack/webpack.config.js"
