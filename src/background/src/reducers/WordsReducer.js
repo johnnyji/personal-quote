@@ -9,7 +9,6 @@ import createReducer from 'create-reducer-redux';
 
 const initialState = {
   fetched: false,
-  fetching: false,
   word: null,
   wordCycleElapse: null
 };
@@ -35,11 +34,11 @@ export default createReducer(initialState, {
   },
 
   onFetching(state) {
-    return {...state, fetched: false, fetching: true};
+    return {...state, fetched: false};
   },
 
   onFetched(state, {word}) {
-    return {...state, fetched: true, fetching: false, word};
+    return {...state, fetched: true, word};
   }
 
 });

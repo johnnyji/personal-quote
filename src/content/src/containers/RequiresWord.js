@@ -14,19 +14,14 @@ export default (ComposedComponent) => {
     static propTypes = {
       dispatch: PropTypes.func.isRequired,
       fetched: PropTypes.bool.isRequired,
-      fetching: PropTypes.bool.isRequired,
       word: CustomPropTypes.word,
       wordCycleElapse: CustomPropTypes.wordCycleElapse.isRequired
     };
 
     componentWillMount() {
-      const {dispatch, fetching, word, wordCycleElapse} = this.props;
+      const {dispatch, word, wordCycleElapse} = this.props;
       const currentTime = new Date().toISOString();
 
-      if (fetching) {
-        console.log('Already fetching');
-        return;
-      }
       // If the word has not yet expired
       if (word && getHoursDiff(currentTime, word.createdAt) <= wordCycleElapse) {
         console.log(`There is a word, and it has been active for ${getHoursDiff(currentTime, word.createdAt)} and has NOT expired`);
@@ -66,9 +61,9 @@ export default (ComposedComponent) => {
     }
 
     render() {
-      const {word, fetched, fetching, ...restProps} = this.props;
+      const {word, fetched, ...restProps} = this.props;
 
-      if (fetching || !fetched) return <FullPageSpinner />;
+      if (!fetched) return <FullPageSpinner />;
 
       return <ComposedComponent {...restProps} word={word} />;
     }
@@ -98,7 +93,6 @@ export default (ComposedComponent) => {
   
   return connect((state) => ({
     fetched: state.words.fetched,
-    fetching: state.words.fetching,
     word: state.words.word
   }))(RequiresWord);
 };

@@ -22,17 +22,22 @@ const changeWordCycleElapse = ({payload: {elapse}}) => {
  * stores them in cache
  */
 const fetchWords = () => {
+
+  console.log("About to fetch words");
   return (dispatch) => {
     dispatch(WordsActionCreators.fetching());
+    console.log("Fetching words");
 
     http.get(endpoints.wordnik.randomWords)
       .then((response) => {
+        console.log("Words fetched");
         const words = Object.keys(response).map((key) => response[key].word);
 
         Promise.all(words.map((word) => {
           return http.get(endpoints.wordnik.word.definitions(word));
         }))
           .then((wordDefinitions) => {
+            console.log("Definitions fetched");
             const [word, ...restWords] = wordDefinitions
               .map((definitions, i) => {
                 return {
@@ -53,7 +58,9 @@ const fetchWords = () => {
             });
 
             chrome.storage.sync.set({currentWord}, () => {
+              console.log("Current word set in storage");
               chrome.storage.sync.set({words: restWords}, () => {
+                console.log("Rest words set in storage");
                 dispatch(WordsActionCreators.fetchSuccess(currentWord));
               });
             });
