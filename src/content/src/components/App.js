@@ -40,20 +40,8 @@ export default class App extends Component {
 
     return (
       <div className={styles.main}>
-        <section className={styles.wordCycleElapse}>
-          <span>New word every</span>
-          <button
-            className={styles.wordCycleElapseButton}
-            onClick={this._handleOpenDropdown}
-            ref={this._setDropdownButtonRef}>
-            {wordCycleElapse} {wordCycleElapse === 1 ? 'hour' : 'hours'}
-          </button>
-          {this._renderWordCycleElapseOptions()}
-        </section>
-        <main
-          className={styles.content}
-          onMouseEnter={this._handleMouseEnter}
-          onMouseLeave={this._handleMouseLeave}>
+        <div className={styles.column} />
+        <div className={`${styles.column} ${styles.columnCenter}`}>
           {this._renderMainContent()}
           <section>
             {topDefinitions.map((definition, i) => (
@@ -63,7 +51,19 @@ export default class App extends Component {
               </div>
             ))}
           </section>
-        </main>
+        </div>
+        <div className={styles.column}>
+          <section className={styles.wordCycleElapse}>
+            <span>New word every</span>
+            <button
+              className={styles.wordCycleElapseButton}
+              onClick={this._handleOpenDropdown}
+              ref={this._setDropdownButtonRef}>
+              {wordCycleElapse} {wordCycleElapse === 1 ? 'hour' : 'hours'}
+            </button>
+            {this._renderWordCycleElapseOptions()}
+          </section>
+        </div>
       </div>
     );
   }
@@ -99,7 +99,8 @@ export default class App extends Component {
   _renderMainContent = () => {
     return (
       <h1 className={styles.word}>
-        {this.props.word.word}
+        Supercaligracioasudafjasfsdfdsfdsf
+        {/* this.props.word.word */}
       </h1>
     );
   };

@@ -1,18 +1,23 @@
 @import './partials/colors';
 
 :local(.main) {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
+  display: flex;
+  left: 0;
+  padding: 32px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-:local(.content) {
+:local(.column) {
+  flex: 1 1 auto;
+}
+
+:local(.columnCenter) {
   display: flex;
   flex-direction: column;
   left: 48%;
-  max-width: 700px;
   position: absolute;
   top: 45%;
   transform: translate(-50%, -50%);

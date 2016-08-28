@@ -18,10 +18,7 @@
     "persistent": false
   },
   "permissions": [
-    "identity",
     "storage",
-    "tabs",
-    "http://*/*",
-    "https://*/*"
+    "tabs"
   ]
 }
